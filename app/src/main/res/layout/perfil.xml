@@ -93,6 +93,14 @@
         android:layout_marginEnd="51dp"
         android:text="Aceptar" />
 
+    <Button
+        android:id="@+id/btn_usu_modificar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/btn_usu_aceptar"
+        android:layout_centerHorizontal="true"
+        android:text="Modificar" />
+
     <TextView
         android:id="@+id/info_login_usua"
         android:layout_width="251dp"

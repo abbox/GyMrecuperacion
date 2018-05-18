@@ -33,11 +33,10 @@ public class Perfil extends Fragment{
     EditText edadU;
     EditText pesoU;
     Button aceptarU;
+    Button modificarU;
     DatabaseReference bbdd,bbdd2;
 
     TextView correoU;
-
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -58,6 +57,7 @@ public class Perfil extends Fragment{
         edadU = (EditText) v.findViewById(R.id.edi_Edad);
         pesoU = (EditText) v.findViewById(R.id.edi_peso);
         aceptarU = (Button) v.findViewById(R.id.btn_usu_aceptar);
+        modificarU = (Button) v.findViewById(R.id.btn_usu_modificar);
 
 
         //recibimos el nombre del usuario del login
@@ -72,36 +72,31 @@ public class Perfil extends Fragment{
         String[] correoUsuario= recibe.split("\\.");
         String co = correoUsuario[0];
         Toast.makeText(getContext(), co, Toast.LENGTH_SHORT).show();
-        //comparar con la base de datos los datos del correo recibido
+        //comparar con la base de datos los datos del correo recibidobbbbbb
 
         bbdd = FirebaseDatabase.getInstance().getReference("usuarios");
-        Query q = bbdd.child(co);
 
+        Query q = bbdd.child(co);
 
             q.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-
-
                         Usuarios usuarios = dataSnapshot.getValue(Usuarios.class);
 
+                    if(usuarios!=null) {
                         String nombre = usuarios.getNombreUsuario();
-                        Toast.makeText(getContext(), nombre, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), nombre, Toast.LENGTH_SHORT).show();
                         String apellido = usuarios.getApellidosUsuario();
                         String edad = usuarios.getEdadUsuario();
                         String peso = usuarios.getPesoUsuario();
-                        String correo = usuarios.getCorreoUsuario();
+                        // String correo = usuarios.getCorreoUsuario();
 
-                            nombreU.setText(nombre);
-                            apellidoU.setText(apellido);
-                            edadU.setText(edad);
-                            pesoU.setText(peso);
-
-
-
-
-
+                        nombreU.setText(nombre);
+                        apellidoU.setText(apellido);
+                        edadU.setText(edad);
+                        pesoU.setText(peso);
+                    }
 
                 }
 
@@ -110,7 +105,6 @@ public class Perfil extends Fragment{
 
                 }
             });
-
 
 
         aceptarU.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +147,42 @@ public class Perfil extends Fragment{
         });
 
 
+        modificarU.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final  String nombreUsuari = nombreU.getText().toString();
+
+                if (!TextUtils.isEmpty(nombreUsuari)){
+                    Query q = bbdd.orderByChild("correoUsuario").equalTo(recibe);
+                    // Query q = bbdd.child(usuario);
+
+                    q.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                                String clave = dataSnapshot1.getKey();
+                                bbdd.child(clave).child("nombreUsuario").setValue(nombreU.getText().toString());
+                                bbdd.child(clave).child("apellidosUsuario").setValue(apellidoU.getText().toString());
+                                bbdd.child(clave).child("edadUsuario").setValue(edadU.getText().toString());
+                                bbdd.child(clave).child("pesoUsuario").setValue(pesoU.getText().toString());
+                                //bbdd.child(clave).child("NombreUsuario").setValue(tNombreUsuario.getText().toString());
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    Toast.makeText(getContext(), "modificado "+nombreUsuari, Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(), "introduce un usuario", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
 
 
         return v;

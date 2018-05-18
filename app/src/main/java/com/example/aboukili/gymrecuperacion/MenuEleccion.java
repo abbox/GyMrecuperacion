@@ -1,5 +1,6 @@
 package com.example.aboukili.gymrecuperacion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,13 +34,16 @@ public class MenuEleccion extends Fragment {
         rutinas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = null;
-                fragment = new Rutinas();
+                //Fragment fragment = null;
+                //fragment = new Rutinas();
 
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                //FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-                ft.replace(R.id.content_main, fragment).addToBackStack(null);
-                ft.commit();
+                //ft.replace(R.id.content_main, fragment).addToBackStack(null);
+                //ft.commit();
+
+                Intent intent = new Intent(getContext(),RecycleActivity.class);
+                startActivity(intent);
 
             }
         });
